@@ -288,3 +288,100 @@ std::vector<std::pair<int,int>> Search::AStar(const Map& map, std::pair<int,int>
     return {};
 }
 
+
+//Funciones Weighted A*
+struct CompararWAstar
+{
+    std::pair<int,int> goal;
+    std::unordered_map<std::pair<int,int>, float>* gCost;
+    float w;
+
+    CompararWAstar(std::pair<int,int> g, 
+                    std::unordered_map<std::pair<int,int>, float>* Cost,
+                    float weight) 
+                    : goal(g), gCost(Cost), w(weight) {}
+
+    bool operator()(std::pair<int,int> a, std::pair<int,int> b)
+    {
+        //Calcular f = g + w * h 
+        float fa = (*gCost)[a] + w * Search::Heuristic(a, goal);    
+        float fb = (*gCost)[b] + w * Search::Heuristic(b, goal);
+
+        return fa > fb; //El f menor tiene mayor prioridad
+
+    }
+
+};
+
+std::vector<std::pair<int,int>> Search::WAStar(const Map& map, std::pair<int,int> start, std::pair<int,int> goal, float weight)
+{
+    std::cout << "===========================\nRunning Weighted A*...\n";
+
+    std::pair<int,int> direcciones[]{{-1,0},{0,1},{1,0},{0,-1}};
+
+    std::unordered_map<std::pair<int,int>, float> gCost;    //Costo desde el inicio
+    gCost[start] = 0.0f;
+
+    //Nodos abiertos
+    std::priority_queue<
+        std::pair<int,int>,
+        std::vector<std::pair<int,int>>,
+        CompararWAstar
+    > OPEN{CompararWAstar(goal, &gCost, weight)};   
+
+    std::unordered_set<std::pair<int,int>> CLOSED;  //Nodos cerrados
+
+    std::unordered_map<std::pair<int,int>, std::pair<int,int>> pathCache;   //Reconstruir camino
+    
+    OPEN.push(start);  //Agregar al inicio
+
+    while(!OPEN.empty())
+    {
+        auto current = OPEN.top();
+        OPEN.pop();
+        
+        //Saltar si es que ya ha sido procesado antes
+        if(CLOSED.find(current) != CLOSED.end()){ continue;}
+
+        //Si llegamos a la meta
+        if(current == goal)
+        {
+            std::cout<<"Meta encontrada (Weighted A*).\n";
+            auto result = reconstruct(pathCache, current);
+            std::cout << "Path size (Weighted A*): " << result.size() << std::endl;
+            return result;
+        }
+
+        CLOSED.insert(current); //Agregar a los nodos cerrados
+
+        //Explorar nodos vecinos
+        for(auto dir:direcciones)
+        {
+            auto vecino = current;
+            vecino.first += dir.first;
+            vecino.second += dir.second;
+
+            //Si esta fuera de rango
+            if(vecino.first < 0 || vecino.first >= map.h ||
+               vecino.second < 0 || vecino.second >= map.w)
+                { continue;}
+
+            //Obstaculos
+            if(map._map[vecino.first][vecino.second] == 1){ continue;}
+
+            //Costo 
+            float newCost = gCost[current] + 1.0f;
+
+            //Si encontramos mejor camino o este no existe
+            if(gCost.find(vecino) == gCost.end() || newCost < gCost[vecino])
+            {
+                gCost[vecino] = newCost;
+                pathCache[vecino] = current;
+                OPEN.push(vecino);
+            }
+        }
+    }
+
+    std::cout<<"NOT FOUND (Weighted A*)!!!!\n";
+    return {};
+}

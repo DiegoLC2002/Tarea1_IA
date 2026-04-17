@@ -16,4 +16,7 @@ public:
     //Funciones Lab 5: A* (A-star)
     static std::vector<std::pair<int,int>> AStar(const Map& map, std::pair<int,int> start, std::pair<int,int> goal);
 
+    //Funciones Weighted A*
+    static std::vector<std::pair<int,int>> WAStar(const Map& map, std::pair<int,int> start, std::pair<int,int> goal, float weight);
+
 };
