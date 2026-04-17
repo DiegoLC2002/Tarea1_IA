@@ -50,7 +50,8 @@ std::vector<std::pair<int,int>> Search::BFS(
                                     std::pair<int,int> goal)
 {    
     std::cout<<"===========================\nRunning BFS...\n";
-	//auto startTime = std::chrono::high_resolution_clock::now();
+	auto startTime = std::chrono::high_resolution_clock::now();     //Medir Tiempo
+    int ExploredNodes = 0;
 
     //stores possible directions
     std::pair<int,int> dirs[]{
@@ -74,12 +75,24 @@ std::vector<std::pair<int,int>> Search::BFS(
         auto pos = OPEN.front();
         OPEN.pop();
 
+        ExploredNodes++;
+
         //Verificar si se esta en el objetivo
         if(pos == goal)
         {
             std::cout << "Meta Encontrada (BFS).\n";
+
+            //Tamaño Camino
             auto result = reconstruct(pathCache, pos);
             std::cout << "Path size (BFS): " << result.size() << std::endl;
+
+            std::cout << "Nodos explorados (BFS): " << ExploredNodes << std::endl;
+
+            //Tiempo
+            auto endTime = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+            std::cout << "Tiempo (BFS): " << duration.count() << " microsegundos\n";
+
             return result;
         }
 
@@ -109,6 +122,13 @@ std::vector<std::pair<int,int>> Search::BFS(
 	}
 
 	std::cout<<"NOT FOUND (BFS)!!!!\n";
+    std::cout << "Nodos explorados (BFS): " << ExploredNodes << std::endl;
+
+    //Tiempo
+    auto endTime = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+    std::cout << "Tiempo (BFS): " << duration.count() << " microsegundos\n";
+
     return {};
 }
 
@@ -131,6 +151,8 @@ std::vector<std::pair<int,int>> Search::greedyBFS(const Map& map, std::pair<int,
 {
     //Implementar uso de greedy
     std::cout<<"===========================\nRunning BFS Greedy...\n";
+    auto startTime = std::chrono::high_resolution_clock::now();     //Medir Tiempo
+    int ExploredNodes = 0;
 
     std::pair<int,int> direcciones[]{
         {-1,0},{0,1},{1,0},{0,-1},   // cardinales
@@ -156,11 +178,21 @@ std::vector<std::pair<int,int>> Search::greedyBFS(const Map& map, std::pair<int,
         auto pos = OPEN.top();
         OPEN.pop();
 
+        ExploredNodes++;
+
         if(pos == goal)
         {
             std::cout<<"Meta encontrada (Greedy).\n";
             auto result = reconstruct(pathCache, pos);
             std::cout << "Path size (Greedy): " << result.size() << std::endl;
+            
+            std::cout << "Nodos explorados (BFS Greedy): " << ExploredNodes << std::endl;
+
+            //Tiempo
+            auto endTime = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+            std::cout << "Tiempo (BFS Greedy): " << duration.count() << " microsegundos\n";
+
             return result;
         }
 
@@ -188,6 +220,13 @@ std::vector<std::pair<int,int>> Search::greedyBFS(const Map& map, std::pair<int,
     }
 
     std::cout<<"NOT FOUND (Greedy)!!\n";
+    std::cout << "Nodos explorados (BFS Greedy): " << ExploredNodes << std::endl;
+
+    //Tiempo
+    auto endTime = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+    std::cout << "Tiempo (BFS Greedy): " << duration.count() << " microsegundos\n";
+
     return {};
 }
 
@@ -230,6 +269,8 @@ struct CompararAstar
 std::vector<std::pair<int,int>> Search::AStar(const Map& map, std::pair<int,int> start, std::pair<int,int> goal)
 {
     std::cout << "===========================\nRunning A*...\n";
+    auto startTime = std::chrono::high_resolution_clock::now();     //Medir Tiempo
+    int ExploredNodes = 0;
 
     std::pair<int,int> direcciones[]{
         {-1,0},{0,1},{1,0},{0,-1},   // cardinales
@@ -256,7 +297,9 @@ std::vector<std::pair<int,int>> Search::AStar(const Map& map, std::pair<int,int>
     {
         auto current = OPEN.top();
         OPEN.pop();
-        
+
+        ExploredNodes++;
+
         //Saltar si es que ya ha sido procesado antes
         if(CLOSED.find(current) != CLOSED.end()){ continue;}
 
@@ -266,6 +309,14 @@ std::vector<std::pair<int,int>> Search::AStar(const Map& map, std::pair<int,int>
             std::cout<<"Meta encontrada (A*).\n";
             auto result = reconstruct(pathCache, current);
             std::cout << "Path size (A*): " << result.size() << std::endl;
+
+            std::cout << "Nodos explorados (A*): " << ExploredNodes << std::endl;
+
+            //Tiempo
+            auto endTime = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+            std::cout << "Tiempo (A*): " << duration.count() << " microsegundos\n";
+
             return result;
         }
 
@@ -304,6 +355,13 @@ std::vector<std::pair<int,int>> Search::AStar(const Map& map, std::pair<int,int>
     }
 
     std::cout<<"NOT FOUND (A*)!!!!\n";
+    std::cout << "Nodos explorados (A*): " << ExploredNodes << std::endl;
+
+    //Tiempo
+    auto endTime = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+    std::cout << "Tiempo (A*): " << duration.count() << " microsegundos\n";
+
     return {};
 }
 
@@ -335,6 +393,8 @@ struct CompararWAstar
 std::vector<std::pair<int,int>> Search::WAStar(const Map& map, std::pair<int,int> start, std::pair<int,int> goal, float weight)
 {
     std::cout << "===========================\nRunning Weighted A*...\n";
+	auto startTime = std::chrono::high_resolution_clock::now();     //Medir Tiempo
+    int ExploredNodes = 0;
 
     std::pair<int,int> direcciones[]{
         {-1,0},{0,1},{1,0},{0,-1},   // cardinales
@@ -361,7 +421,9 @@ std::vector<std::pair<int,int>> Search::WAStar(const Map& map, std::pair<int,int
     {
         auto current = OPEN.top();
         OPEN.pop();
-        
+
+        ExploredNodes++;
+
         //Saltar si es que ya ha sido procesado antes
         if(CLOSED.find(current) != CLOSED.end()){ continue;}
 
@@ -371,6 +433,14 @@ std::vector<std::pair<int,int>> Search::WAStar(const Map& map, std::pair<int,int
             std::cout<<"Meta encontrada (Weighted A*).\n";
             auto result = reconstruct(pathCache, current);
             std::cout << "Path size (Weighted A*): " << result.size() << std::endl;
+            
+            std::cout << "Nodos explorados (Weighted A*): " << ExploredNodes << std::endl;
+
+            //Tiempo
+            auto endTime = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+            std::cout << "Tiempo (Weighted A*): " << duration.count() << " microsegundos\n";
+
             return result;
         }
 
@@ -409,5 +479,12 @@ std::vector<std::pair<int,int>> Search::WAStar(const Map& map, std::pair<int,int
     }
 
     std::cout<<"NOT FOUND (Weighted A*)!!!!\n";
+    std::cout << "Nodos explorados (Weighted A*): " << ExploredNodes << std::endl;
+
+    //Tiempo
+    auto endTime = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+    std::cout << "Tiempo (Weighted A*): " << duration.count() << " microsegundos\n";
+    
     return {};
 }
