@@ -110,6 +110,19 @@ std::vector<std::pair<int,int>> Search::BFS(
 
             if(map._map[newPos.first][newPos.second] == 1){ continue;}
 
+            // Evitar corner cutting
+            if(dir.first != 0 && dir.second != 0)
+            {
+                std::pair<int,int> check1 = {pos.first + dir.first, pos.second};
+                std::pair<int,int> check2 = {pos.first, pos.second + dir.second};
+
+                if(map._map[check1.first][check1.second] == 1 ||
+                map._map[check2.first][check2.second] == 1)
+                {
+                    continue;
+                }
+            }
+
             //Ya visitado
             if(visited[newPos.first][newPos.second]){ continue;}
 
@@ -209,6 +222,19 @@ std::vector<std::pair<int,int>> Search::greedyBFS(const Map& map, std::pair<int,
 
             if(map._map[newPos.first][newPos.second] == 1){ continue;}
 
+            // Evitar corner cutting
+            if(dir.first != 0 && dir.second != 0)
+            {
+                std::pair<int,int> check1 = {pos.first + dir.first, pos.second};
+                std::pair<int,int> check2 = {pos.first, pos.second + dir.second};
+
+                if(map._map[check1.first][check1.second] == 1 ||
+                map._map[check2.first][check2.second] == 1)
+                {
+                    continue;
+                }
+            }
+
             //Ya visitado
             if(visitados[newPos.first][newPos.second]){ continue;}
 
@@ -298,10 +324,10 @@ std::vector<std::pair<int,int>> Search::AStar(const Map& map, std::pair<int,int>
         auto current = OPEN.top();
         OPEN.pop();
 
-        ExploredNodes++;
-
         //Saltar si es que ya ha sido procesado antes
         if(CLOSED.find(current) != CLOSED.end()){ continue;}
+
+        ExploredNodes++;
 
         //Si llegamos a la meta
         if(current == goal)
@@ -336,6 +362,19 @@ std::vector<std::pair<int,int>> Search::AStar(const Map& map, std::pair<int,int>
 
             //Obstaculos
             if(map._map[vecino.first][vecino.second] == 1){ continue;}
+
+            //Evitar corner cutting (solo si es diagonal)
+            if(dir.first != 0 && dir.second != 0)
+            {
+                std::pair<int,int> check1 = {current.first + dir.first, current.second};
+                std::pair<int,int> check2 = {current.first, current.second + dir.second};
+
+                if(map._map[check1.first][check1.second] == 1 ||
+                map._map[check2.first][check2.second] == 1)
+                {
+                    continue;
+                }
+            }
 
             //Costo 
             bool diagonal = (dir.first != 0 && dir.second != 0);
@@ -422,10 +461,10 @@ std::vector<std::pair<int,int>> Search::WAStar(const Map& map, std::pair<int,int
         auto current = OPEN.top();
         OPEN.pop();
 
-        ExploredNodes++;
-
         //Saltar si es que ya ha sido procesado antes
         if(CLOSED.find(current) != CLOSED.end()){ continue;}
+
+        ExploredNodes++;
 
         //Si llegamos a la meta
         if(current == goal)
@@ -460,6 +499,19 @@ std::vector<std::pair<int,int>> Search::WAStar(const Map& map, std::pair<int,int
 
             //Obstaculos
             if(map._map[vecino.first][vecino.second] == 1){ continue;}
+
+            //Evitar corner cutting (solo si es diagonal)
+            if(dir.first != 0 && dir.second != 0)
+            {
+                std::pair<int,int> check1 = {current.first + dir.first, current.second};
+                std::pair<int,int> check2 = {current.first, current.second + dir.second};
+
+                if(map._map[check1.first][check1.second] == 1 ||
+                map._map[check2.first][check2.second] == 1)
+                {
+                    continue;
+                }
+            }
 
             //Costo 
             bool diagonal = (dir.first != 0 && dir.second != 0);
