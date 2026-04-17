@@ -196,8 +196,14 @@ float Search::Heuristic(std::pair<int,int> start, std::pair<int,int> goal)
 {
     //Implementar heuristica Manhattan (Solo se mueve en 4 direcciones)
     //Debe calcular y devolver un valor heuristico.
+    //return abs(start.first - goal.first) + abs(start.second - goal.second);
 
-    return abs(start.first - goal.first) + abs(start.second - goal.second);
+    //Heuristica Octil
+    float dx = abs(start.first - goal.first);
+    float dy = abs(start.second - goal.second);
+
+            //Mov principales + ajustar coste mov. diagonal * diagonales
+    return std::max(dx,dy) + (1.41f - 1.0f) * std::min(dx,dy);
 }
 
 
