@@ -53,7 +53,10 @@ std::vector<std::pair<int,int>> Search::BFS(
 	//auto startTime = std::chrono::high_resolution_clock::now();
 
     //stores possible directions
-    std::pair<int,int> dirs[]{{-1,0},{0,1},{1,0},{0,-1}};
+    std::pair<int,int> dirs[]{
+        {-1,0},{0,1},{1,0},{0,-1},   // cardinales
+        {-1,-1},{-1,1},{1,-1},{1,1}  // diagonales
+    };
 
     //bool visited[map.h][map.w]{false};      //we'll just use a matrix og booleans to indicated if visited
     std::vector<std::vector<bool>> visited(map.h, std::vector<bool>(map.w, false));
@@ -105,7 +108,7 @@ std::vector<std::pair<int,int>> Search::BFS(
 		}
 	}
 
-	std::cout<<"NOT FOUND!!!!\n";
+	std::cout<<"NOT FOUND (BFS)!!!!\n";
     return {};
 }
 
@@ -129,7 +132,10 @@ std::vector<std::pair<int,int>> Search::greedyBFS(const Map& map, std::pair<int,
     //Implementar uso de greedy
     std::cout<<"===========================\nRunning BFS Greedy...\n";
 
-    std::pair<int,int> direcciones[]{{-1,0},{0,1},{1,0},{0,-1}};
+    std::pair<int,int> direcciones[]{
+        {-1,0},{0,1},{1,0},{0,-1},   // cardinales
+        {-1,-1},{-1,1},{1,-1},{1,1}  // diagonales
+    };
 
     std::vector<std::vector<bool>> visitados(map.h, std::vector<bool>(map.w, false));
 
@@ -219,7 +225,10 @@ std::vector<std::pair<int,int>> Search::AStar(const Map& map, std::pair<int,int>
 {
     std::cout << "===========================\nRunning A*...\n";
 
-    std::pair<int,int> direcciones[]{{-1,0},{0,1},{1,0},{0,-1}};
+    std::pair<int,int> direcciones[]{
+        {-1,0},{0,1},{1,0},{0,-1},   // cardinales
+        {-1,-1},{-1,1},{1,-1},{1,1}  // diagonales
+    };
 
     std::unordered_map<std::pair<int,int>, float> gCost;    //Costo desde el inicio
     gCost[start] = 0.0f;
@@ -317,7 +326,10 @@ std::vector<std::pair<int,int>> Search::WAStar(const Map& map, std::pair<int,int
 {
     std::cout << "===========================\nRunning Weighted A*...\n";
 
-    std::pair<int,int> direcciones[]{{-1,0},{0,1},{1,0},{0,-1}};
+    std::pair<int,int> direcciones[]{
+        {-1,0},{0,1},{1,0},{0,-1},   // cardinales
+        {-1,-1},{-1,1},{1,-1},{1,1}  // diagonales
+    };
 
     std::unordered_map<std::pair<int,int>, float> gCost;    //Costo desde el inicio
     gCost[start] = 0.0f;
