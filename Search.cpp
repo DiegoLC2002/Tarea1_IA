@@ -281,7 +281,11 @@ std::vector<std::pair<int,int>> Search::AStar(const Map& map, std::pair<int,int>
             if(map._map[vecino.first][vecino.second] == 1){ continue;}
 
             //Costo 
-            float newCost = gCost[current] + 1.0f;
+            bool diagonal = (dir.first != 0 && dir.second != 0);
+            float stepCost = diagonal ? 1.41f : 1.0f;
+
+            float newCost = gCost[current] + stepCost;
+
 
             //Si encontramos mejor camino o este no existe
             if(gCost.find(vecino) == gCost.end() || newCost < gCost[vecino])
@@ -382,8 +386,12 @@ std::vector<std::pair<int,int>> Search::WAStar(const Map& map, std::pair<int,int
             if(map._map[vecino.first][vecino.second] == 1){ continue;}
 
             //Costo 
-            float newCost = gCost[current] + 1.0f;
+            bool diagonal = (dir.first != 0 && dir.second != 0);
+            float stepCost = diagonal ? 1.41f : 1.0f;
 
+            float newCost = gCost[current] + stepCost;
+
+            
             //Si encontramos mejor camino o este no existe
             if(gCost.find(vecino) == gCost.end() || newCost < gCost[vecino])
             {
