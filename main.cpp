@@ -87,6 +87,8 @@ int main(int argc, char *argv[]){
 
     //Modo normal
     colorMap.print();
+    //std::cout << "\nMapa (Inicio = S, Meta = G):\n";
+    //colorMap.printStartGoal({x1,y1}, {x2,y2});
 
 
     //6)Ejecutar Metodo de busqueda
@@ -154,21 +156,8 @@ int main(int argc, char *argv[]){
 Para compilar ingresa en WSL: make
 
 Coordenadas de prueba al ajecutar:
-    - simple.txt:
-        ./busqueda simple.txt 1 1 5 4
-        ./busqueda simple.txt 1 1 5 4
-        ./busqueda simple.txt 6 1 1 4
+    *Nota: si se ingresa un septimo argumento, se ingresa el modo test, ej: ./busqueda mapa.txt 1 1 5 4 test*
+    *por otro lado si se ingresan 6 argumentos se ingresa al menu de metodos de busqueda, ej: ./busqueda mapa.txt 1 1 5 4 *
 
-    - medium.txt:
-        ./busqueda medium.txt 6 1 1 4
-        ./busqueda medium.txt 1 1 9 14
-        ./busqueda medium.txt 1 1 1 14
 
-    - maze512.txt:
-        ./busqueda maze512.txt 1 1 510 510
-        ./busqueda maze512.txt 10 10 100 100
-
-    - paris.txt:
-        ./busqueda paris.txt 50 50 60 60        
-        ./busqueda paris.txt 10 10 200 200
 */

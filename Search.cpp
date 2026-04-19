@@ -6,20 +6,7 @@
 #include <limits>
 #include <cmath>
 #include <unordered_set>
-
-namespace std
-{
-    //this is needed to store a pair<int,int> in an associative container
-    //such as unorered_set and unordered_map
-	template<> struct hash<std::pair<int,int>>
-	{
-		std::size_t operator()( const std::pair<int,int> & p) const noexcept
-		{
-            hash<int> hasher;
-			return hasher(p.first) ^ (hasher(p.second)<<1);
-		}
-	};
-}
+#include "PairHash.h"
 
 std::vector<std::pair<int,int>> Search::reconstruct(
     const std::unordered_map<std::pair<int,int>,std::pair<int,int>> &pathCache, 
@@ -85,6 +72,8 @@ std::vector<std::pair<int,int>> Search::BFS(
             //Tamaño Camino
             auto result = reconstruct(pathCache, pos);
             std::cout << "Path size (BFS): " << result.size() << std::endl;
+            float totalCost = result.size() - 1;
+            std::cout << "Costo aproximado (BFS): " << totalCost << std::endl;
 
             std::cout << "Nodos explorados (BFS): " << ExploredNodes << std::endl;
 
@@ -198,7 +187,9 @@ std::vector<std::pair<int,int>> Search::greedyBFS(const Map& map, std::pair<int,
             std::cout<<"Meta encontrada (Greedy).\n";
             auto result = reconstruct(pathCache, pos);
             std::cout << "Path size (Greedy): " << result.size() << std::endl;
-            
+            float totalCost = result.size() - 1;
+            std::cout << "Costo aproximado (Greedy): " << totalCost << std::endl;
+
             std::cout << "Nodos explorados (BFS Greedy): " << ExploredNodes << std::endl;
 
             //Tiempo
@@ -336,6 +327,9 @@ std::vector<std::pair<int,int>> Search::AStar(const Map& map, std::pair<int,int>
             auto result = reconstruct(pathCache, current);
             std::cout << "Path size (A*): " << result.size() << std::endl;
 
+            float totalCost = gCost[current];
+            std::cout << "Costo total (A*): " << totalCost << std::endl;
+
             std::cout << "Nodos explorados (A*): " << ExploredNodes << std::endl;
 
             //Tiempo
@@ -379,8 +373,9 @@ std::vector<std::pair<int,int>> Search::AStar(const Map& map, std::pair<int,int>
             //Costo 
             bool diagonal = (dir.first != 0 && dir.second != 0);
             float stepCost = diagonal ? 1.41f : 1.0f;
+            float heightCost = abs(map._map[vecino.first][vecino.second] - map._map[current.first][current.second]);
 
-            float newCost = gCost[current] + stepCost;
+            float newCost = gCost[current] + stepCost + heightCost;
 
 
             //Si encontramos mejor camino o este no existe
@@ -473,6 +468,9 @@ std::vector<std::pair<int,int>> Search::WAStar(const Map& map, std::pair<int,int
             auto result = reconstruct(pathCache, current);
             std::cout << "Path size (Weighted A*): " << result.size() << std::endl;
             
+            float totalCost = gCost[current];
+            std::cout << "Costo total (Weighted A*): " << totalCost << std::endl;
+
             std::cout << "Nodos explorados (Weighted A*): " << ExploredNodes << std::endl;
 
             //Tiempo
@@ -516,8 +514,9 @@ std::vector<std::pair<int,int>> Search::WAStar(const Map& map, std::pair<int,int
             //Costo 
             bool diagonal = (dir.first != 0 && dir.second != 0);
             float stepCost = diagonal ? 1.41f : 1.0f;
+            float heightCost = abs(map._map[vecino.first][vecino.second] - map._map[current.first][current.second]);
 
-            float newCost = gCost[current] + stepCost;
+            float newCost = gCost[current] + stepCost + heightCost;
 
             
             //Si encontramos mejor camino o este no existe

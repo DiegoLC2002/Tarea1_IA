@@ -1,5 +1,7 @@
 #include "ColorMap.h"
 #include <iostream>
+#include <unordered_set>
+#include "PairHash.h"
 
 /*
 red 31
@@ -10,35 +12,41 @@ pink 35
 white 37
 */
 
-ColorMap::ColorMap(const Map& rhs):Map(rhs),colors{37,34,32,31,33}{
+ColorMap::ColorMap(const Map& rhs):Map(rhs){}
 
-}
-
+//Mapa simple solo con terreno
 void ColorMap::print() const
 {
     for(int i=0;i<h;i++)
     {
         for(int j=0;j<w;j++)
         {
-            //std::cout<<"\033[1;" << colors[_map[i][j]] << "m"<<_map[i][j]<<" ";
-            int value = _map[i][j];
-
-            if(value < 0 || value >= (int)colors.size()){
-                std::cout << value << " ";
-            } 
-            else 
+            if(_map[i][j] == 1)
             {
-                std::cout << "\033[1;" << colors[value] << "m" << value << " ";
+                std::cout << "[] ";
+            }
+            else
+            {
+                int value = _map[i][j];
+                int color;
+
+                if(value <= 3) color = 33;      // amarillo (bajo)
+                else if(value <= 5) color = 35; // rosado (medio)
+                else color = 31;                // rojo (alto)
+
+                std::cout << "\033[1;" << color << "m" 
+                          << value << " \033[0m";
             }
         }
         std::cout<<std::endl;
     }
-    std::cout<<"\033[1;37m\n";
+    std::cout<<"\033[1;37m\n"; 
 }
 
+//Mapa con camino
 void ColorMap::print(std::vector<std::pair<int,int>> path) const
 {
-    auto __map=_map;
+    /*auto __map=_map;
 
     __map[path[0].first][path[0].second]=2;
 
@@ -66,5 +74,70 @@ void ColorMap::print(std::vector<std::pair<int,int>> path) const
         }
         std::cout<<std::endl;
     }
-    std::cout<< "\033[1;37m\n";
+    std::cout<< "\033[1;37m\n";*/
+
+    std::unordered_set<std::pair<int,int>> pathSet(path.begin(), path.end());
+
+    auto start = path.front();
+    auto goal = path.back();
+
+    for(int i=0;i<h;i++)
+    {
+        for(int j=0;j<w;j++)
+        {
+            std::pair<int,int> pos = {i,j};
+
+            if(i == start.first && j == start.second)
+            {
+                std::cout << "\033[1;34mS \033[0m";     //Blaco
+            }
+            else if(i == goal.first && j == goal.second)
+            {
+                std::cout << "\033[1;34mG \033[0m";     //Blanco
+            }
+            else if(pathSet.count(pos))
+            {
+                int value = _map[i][j];
+                std::cout << "\033[1;32m" << value << " \033[0m";  //verde
+            }
+            else if(_map[i][j] == 1)
+            {
+                std::cout << "[] ";
+            }
+            else
+            {
+                int value = _map[i][j];
+                int color = 37;
+
+                if(value <= 3) color = 33;      //Amarilla (bajo)
+                else if(value <= 5) color = 35; //Rosado (medio)
+                else color = 31;                //Roja (alta)
+
+                std::cout << "\033[1;" << color << "m" << value << " \033[0m";
+            }
+        }
+        std::cout << "\n";
+    }
+    std::cout << "\n";
+}
+
+// 🔹 SOLO inicio y meta (para preview)
+void ColorMap::printStartGoal(std::pair<int,int> start, std::pair<int,int> goal) const
+{
+    for(int i=0;i<h;i++)
+    {
+        for(int j=0;j<w;j++)
+        {
+            if(i == start.first && j == start.second)
+                std::cout << "S ";
+            else if(i == goal.first && j == goal.second)
+                std::cout << "G ";
+            else if(_map[i][j] == 1)
+                std::cout << "[] ";
+            else
+                std::cout << ". ";
+        }
+        std::cout << "\n";
+    }
+    std::cout << "\n";
 }
