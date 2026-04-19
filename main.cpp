@@ -13,11 +13,14 @@ int main(int argc, char *argv[]){
     //6 arguments: program name, map file, x1, y1, x2, y2
 
     ///1) verificar cantidad de argumentos
-    if(argc != 6)
+    if(argc != 6 && argc != 7)
     {
         std::cerr << "Formato correcto: " << argv[0] << "<mapa> x1 y1 x2 y2\n";
+        std::cerr << "Formato correcto (para tests)): " << argv[0] << "<mapa> x1 y1 x2 y2 test\n";
         return 1;
     }
+
+    bool testMode = (argc == 7);
 
     ///2) obtener nombre del archivo
     std::string fileMapName = argv[1];
@@ -61,15 +64,39 @@ int main(int argc, char *argv[]){
 
     ///5) Mostrar mapa    
     ColorMap colorMap(map);
+    
+    //Modo experimento para multiples Runs
+    if(testMode)
+    {
+        int runs = 20; //numero de pruebas realizadas (10 - 30)
+
+        std::cout << "\n===== MODO EXPERIMENTO =====\n";
+
+        for(int i = 0; i < runs; i++)
+        {
+            std::cout << "\nRun #" << i+1 << "\n";
+
+            Search::BFS(map,{x1,y1},{x2,y2});
+            Search::greedyBFS(map,{x1,y1},{x2,y2});
+            Search::AStar(map,{x1,y1},{x2,y2});
+            Search::WAStar(map,{x1,y1},{x2,y2}, 1.5f); // prueba distintos w
+        }
+
+        return 0;
+    }
+
+    //Modo normal
     colorMap.print();
 
-    //6)Ejecutar BFS o BFS greedy
+
+    //6)Ejecutar Metodo de busqueda
     int opcionBFS;
 
     std::cout << "Seleccione metodo de busqueda de caminos:\n";
     std::cout << "1.- BFS\n";
     std::cout << "2.- BFS Greedy\n";
     std::cout << "3.- A*\n";
+    std::cout << "4.- Weighted A*\n";
     std::cout << "Opcion: ";
     std::cin >> opcionBFS;
 
@@ -79,13 +106,20 @@ int main(int argc, char *argv[]){
     {
         case 1: path = Search::BFS(map,{x1,y1},{x2,y2}); //Calculate path distance
                 break;
-        
+            
         case 2: path = Search::greedyBFS(map,{x1,y1},{x2,y2});
                 break;
 
         case 3: path = Search::AStar(map,{x1,y1},{x2,y2});
                 break;
-        
+
+        case 4: float w;
+                std::cout << "Ingrese peso (ej: 1.0 - 2.0): ";
+                std::cin >> w;
+
+                path = Search::WAStar(map,{x1,y1},{x2,y2}, w);
+                break;
+            
         default: std::cout<<"Opcion invalida\n";
                  return 1;
     }
