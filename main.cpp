@@ -159,5 +159,16 @@ Coordenadas de prueba al ajecutar:
     *Nota: si se ingresa un septimo argumento, se ingresa el modo test, ej: ./busqueda mapa.txt 1 1 5 4 test*
     *por otro lado si se ingresan 6 argumentos se ingresa al menu de metodos de busqueda, ej: ./busqueda mapa.txt 1 1 5 4 *
 
+    - simple.txt:
+        ./busqueda simple.txt 1 1 6 4
+    
+    - medium.txt:
+        ./busqueda medium.txt 1 1 7 6 
+
+    - perling_small_map.txt:
+        ./busqueda perling_small_map.txt 1 1 6 15
+
+    - perling_medium_map.txt
+        ./busqueda perling_medium_map.txt 1 1 29 63
 
 */

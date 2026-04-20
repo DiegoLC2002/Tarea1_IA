@@ -23,7 +23,8 @@ void ColorMap::print() const
         {
             if(_map[i][j] == 1)
             {
-                std::cout << "[] ";
+                int value = _map[i][j];
+                std::cout << "\033[1;34m" << value << " \033[0m";  //azul
             }
             else
             {
@@ -102,7 +103,8 @@ void ColorMap::print(std::vector<std::pair<int,int>> path) const
             }
             else if(_map[i][j] == 1)
             {
-                std::cout << "[] ";
+                int value = _map[i][j];
+                std::cout << "\033[1;34m" << value << " \033[0m";  //azul
             }
             else
             {
@@ -133,7 +135,10 @@ void ColorMap::printStartGoal(std::pair<int,int> start, std::pair<int,int> goal)
             else if(i == goal.first && j == goal.second)
                 std::cout << "G ";
             else if(_map[i][j] == 1)
-                std::cout << "[] ";
+            {   
+                int value = _map[i][j];
+                std::cout << "\033[1;34m" << value << " \033[0m";  //azul
+            }
             else
                 std::cout << ". ";
         }
